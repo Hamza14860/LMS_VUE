@@ -26,10 +26,10 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item ">
+      <li class="nav-item active">
         <router-link class="nav-link" to="/HomePage">Home <span class="sr-only">(current)</span></router-link>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item">
         <router-link class="nav-link" to="/Books">Books </router-link>
       </li>
       <li class="nav-item dropdown">
@@ -58,10 +58,8 @@
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2"  v-model="booksearched" type="search" placeholder="Search" aria-label="Search">
-<!--      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-      <a @click="searchBook()" class="btn btn-outline-success my-2 my-sm-0">Search</a>
-
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </div>
 </nav>
@@ -79,11 +77,12 @@
       <div class="col">
           <div class="col1">
             <div class="panel">
-              <div class="col"   >BOOK NAME & ISBN#</div>
-              <div class="row" v-for="book in books" :key="book.id" >
+              <div class="col"   >Book Searched</div>
+              <div class="row" v-for="book in booksSearchedResult" :key="book.id" >
 
                     <h5 class="col">{{ book.name }}</h5>
                     <h6 class="col">{{ book.isbn }}</h6>
+                    <h6 class="col">{{ book.author }}</h6>
 
                 </div>
 
@@ -92,19 +91,7 @@
           </div>
       </div>
 
-      <div class="col" >
-          <div class="col2">
-            <div class="panel2">
-                <h5 >Search from Available Books</h5>
-              <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" v-model="booksearched" type="search" placeholder="Search Book" aria-label="Search">
-                <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-                <a @click="searchBook()" class="btn btn-outline-success my-2 my-sm-0">Search</a>
 
-              </form>
-            </div>
-          </div>
-      </div>
     </div>
 
 
@@ -134,7 +121,6 @@ export default {
   name: 'Books',
   data () {
     return {
-      isverifiedbook: {status: "falsebook"}
       //books: []
     }
   },
@@ -144,7 +130,11 @@ export default {
     },
     books () {
       return this.$store.state.booksmodule.books
-    }
+    },
+    booksSearchedResult () {
+			return this.$store.state.booksmodule.selectedBook
+
+		}
   },
 
   created () {
@@ -159,17 +149,7 @@ export default {
 		home_route() {this.$router.push('/HomePage')},
 		book_route() {this.$router.push('/Books')},
 		issueReturn_route() {this.$router.push('/IssueReturn')},
-		login_route() {this.$router.push('/')},
-    searchBook(){
-      this.$store.commit('booksmodule/SearchedBook', [this.booksearched,this.isverifiedbook])
-        if(this.isverifiedbook.out.status === "succeedbook") {
-            this.$router.push('/BookSearchValidPage')
-        }
-        else{
-          console.log("No Book exists");
-            this.$router.push('/BookSearchInvalidPage')
-        }
-    }
+		login_route() {this.$router.push('/')}
 
   }
 }

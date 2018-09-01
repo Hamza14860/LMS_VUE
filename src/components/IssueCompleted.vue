@@ -5,7 +5,8 @@
 
       <!--<h1 class="form-heading">LOGIN FORM</h1>  -->
       <p style="text-align:center;">
-      <img  src="lms2.png" alt="logo" width="100" height="100" align="middle" >
+      <img  src="/static/lms2.png" alt="logo" width="100" height="100" align="middle" >
+
       Library Management System</p>
 
 
@@ -13,7 +14,8 @@
         <div class="main-div">
               <div class="panel">
               <h2>ISSUE COMPLETED</h2>
-              <a @click="home_route()">HomePage</a>
+              <!--<a @click="home_route()">HomePage</a>-->
+              <router-link class="nav-link" to="/HomePage">HomePage </router-link>
             </div>
 
             </div>

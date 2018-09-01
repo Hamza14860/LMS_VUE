@@ -16,14 +16,15 @@
   <!--////////////////////////////////////////////NAV BAR\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
   <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a @click="home_route()" class="navbar-brand" >LMS</a>
+  <!--<a @click="home_route()" class="navbar-brand" >LMS</a>-->
+  <router-link class="navbar-brand" to="/HomePage">LMS </router-link>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item">
         <router-link class="nav-link" to="/HomePage">Home <span class="sr-only">(current)</span></router-link>
       </li>
       <li class="nav-item">
@@ -41,18 +42,21 @@
         </div>
       </li>
       <li class="nav-item">
-        <a @click="issueReturn_route()" class="nav-link" >Issue</a>
+        <router-link class="nav-link active" to="/IssueReturn">Issue </router-link>
+        <!--<a @click="issueReturn_route()" class="nav-link" >Issue</a>-->
       </li>
       <li class="nav-item">
-        <a @click="issueReturn_route()" class="nav-link" >Return</a>
+        <router-link class="nav-link" to="/IssueReturn">Return </router-link>
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="bookentry">BookEntry</a>
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2" v-model="booksearched" type="search" placeholder="Search" aria-label="Search">
+<!--      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+			<a @click="searchBook()" class="btn btn-outline-success my-2 my-sm-0">Search</a>
+
     </form>
   </div>
 </nav>
@@ -132,10 +136,10 @@
           <div class="form-check">
             <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3" required>
             <label class="form-check-label" for="invalidCheck3">
-            Recheck Details and agree
+            Recheck Details
             </label>
             <div class="invalid-feedback">
-              You must agree before submitting.
+              You must NOT agree before submitting.
             </div>
           </div>
         </div>
@@ -220,6 +224,7 @@ export default {
   name: 'IssueReturn',
   data () {
     return {
+			isverifiedbook: {status: "falsebook"}
 
     }
   },
@@ -271,7 +276,17 @@ export default {
      console.log(this.member)
      console.log(this.firstname)
     //console.log(this.book.id)
-    }
+		},
+		searchBook(){
+			this.$store.commit('booksmodule/SearchedBook', [this.booksearched,this.isverifiedbook])
+				if(this.isverifiedbook.out.status === "succeedbook") {
+						this.$router.push('/BookSearchValidPage')
+				}
+				else{
+					console.log("No Book exists");
+						this.$router.push('/BookSearchInvalidPage')
+				}
+		}
   }
 }
 

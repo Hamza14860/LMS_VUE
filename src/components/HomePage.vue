@@ -17,7 +17,9 @@
   <!--////////////////////////////////////////////NAV BAR\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\-->
   <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a @click="home_route()" class="navbar-brand" >LMS</a>
+<!--  <a @click="home_route()" class="navbar-brand" >LMS</a>-->
+	<router-link class="navbar-brand" to="/HomePage">LMS </router-link>
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -42,18 +44,21 @@
         </div>
       </li>
       <li class="nav-item">
-        <a @click="issueReturn_route()" class="nav-link" >Issue</a>
+        <!--<a @click="issueReturn_route()" class="nav-link" >Issue</a>-->
+				<router-link class="nav-link" to="/IssueReturn">Issue </router-link>
       </li>
       <li class="nav-item">
-        <a @click="issueReturn_route()" class="nav-link" >Return</a>
+				<router-link class="nav-link" to="/IssueReturn">Return </router-link>
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="bookentry">BookEntry</a>
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2" v-model="booksearched" type="search" placeholder="Search Book" aria-label="Search">
+      <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+			<a @click="searchBook()" class="btn btn-outline-success my-2 my-sm-0">Search</a>
+
     </form>
   </div>
 </nav>
@@ -86,10 +91,15 @@
 			<div class="col" >
 					<div class="col2">
 						<div class="panel2">
-							<h2>Search Books</h2>
+								<h5 >Search from Available Books</h5>
+							<form class="form-inline my-2 my-lg-0">
+								<input class="form-control mr-sm-2" v-model="booksearched" type="search" placeholder="Search Book" aria-label="Search">
+								<!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+								<a @click="searchBook()" class="btn btn-outline-success my-2 my-sm-0">Search</a>
+
+							</form>
 						</div>
 					</div>
-					Search books
 			</div>
 		</div>
 
@@ -124,7 +134,7 @@ export default {
   name: 'HomePage',
   data () {
     return {
-
+			isverifiedbook: {status: "falsebook"}
     }
   },
   computed: {
@@ -133,12 +143,9 @@ export default {
 		},
 		books () {
 			return this.$store.state.booksmodule.books
-
 		}
   },
-
   created () {
-
      const that = this
     axios.get('http://localhost:3000/api/v1/books')
     .then(response => {
@@ -151,10 +158,22 @@ export default {
 	},
 		book_route() {this.$router.push('/Books')},
 		issueReturn_route() {this.$router.push('/IssueReturn')},
-		login_route() {this.$router.push('/')}
+		login_route() {this.$router.push('/')},
+		searchBook(){
+			this.$store.commit('booksmodule/SearchedBook', [this.booksearched,this.isverifiedbook])
+				if(this.isverifiedbook.out.status === "succeedbook") {
+						this.$router.push('/BookSearchValidPage')
+				}
+				else{
+					console.log("No Book exists");
+						this.$router.push('/BookSearchInvalidPage')
+				}
+		}
 
   }
 }
+
+
 
 </script>
 
@@ -167,7 +186,7 @@ export default {
 
 
 
-    .HomePage{ background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-attachment: fixed; background-position:center; background-size:cover; padding:30px;
+    .HomePage{ background-image:url("https://hdwallsource.com/img/2014/9/blur-26347-27038-hd-wallpapers.jpg"); background-attachment: fixed; background-position:center; background-size:cover; padding:60px;
     border-width:5px;
     border-style:inset;
     border-color: coral;
@@ -196,6 +215,11 @@ export default {
       border-color: coral;
 
     }
+		.col{color: #FF0000;
+		font-size: 18px;
+		text-decoration: underline;
+
+		}
 
     .panel2 h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
     .panel2 p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
@@ -220,6 +244,7 @@ export default {
       color: #777777;
       font-size: 14px;
       text-decoration: underline;
+
     }
     .home-page  .btn.btn-primary {
       background: #f0ad4e none repeat scroll 0 0;
